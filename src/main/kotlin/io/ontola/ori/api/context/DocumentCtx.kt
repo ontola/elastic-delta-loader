@@ -18,17 +18,15 @@
 
 package io.ontola.ori.api.context
 
-import com.google.common.base.Splitter
-import io.ontola.ori.api.ORIContext
-import io.ontola.ori.api.getDigester
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.eclipse.rdf4j.model.IRI
-import java.io.File
-import java.math.BigInteger
-import java.security.MessageDigest
 
 /** To keep track of the state while processing a record into a file on disk. */
-class DocumentCtx(override val ctx: CtxProps) : ResourceCtx<DocumentCtx>(ctx) {
+class DocumentCtx<DS>(
+    override val ctx: CtxProps,
+    override val datastore: DS
+) : ResourceCtx<DocumentCtx<DS>, DS>(ctx, datastore) {
+
     override val cmd: String? = ctx.cmd
 
     override val iri: IRI? = ctx.iri
@@ -39,39 +37,25 @@ class DocumentCtx(override val ctx: CtxProps) : ResourceCtx<DocumentCtx>(ctx) {
 
     override val id: String? = ctx.iri?.stringValue()?.substring(ctx.iri.stringValue().lastIndexOf('/') + 1)
 
+    override val partition: String? = ctx.partition
+
     override fun copy(
         cmd: String?,
         record: ConsumerRecord<String, String>?,
         iri: IRI?,
-        version: String?
-    ): DocumentCtx {
+        partition: String?,
+        version: String?,
+        datastore: DS?
+    ): DocumentCtx<DS> {
         return DocumentCtx(
             ctx.copy(
                 cmd = cmd,
                 record = record,
                 iri = iri,
+                partition = partition,
                 version = version
-            )
+            ),
+            datastore ?: this.datastore
         )
-    }
-
-    /** The directory of the document. Points to the container folder or a version if set */
-    override fun dir(): File {
-        var filePath = "${ORIContext.getCtx().config.getProperty("ori.api.dataDir")}/${dirPath()}"
-        if (ctx.version != null) {
-            filePath += "/${ctx.version}"
-        }
-        return File(filePath)
-    }
-
-    private fun dirPath(): String {
-        val md5sum = digester.digest(id?.toByteArray())
-        val hashedId = String.format("%032x", BigInteger(1, md5sum))
-
-        return Splitter.fixedLength(8).split(hashedId).joinToString("/")
-    }
-
-    companion object {
-        private val digester: MessageDigest = getDigester()
     }
 }

@@ -1,4 +1,4 @@
-package io.ontola.linkeddelta
+package io.ontola.linkeddelta.processor
 
 import io.ontola.rdfUtils.createIRI
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull

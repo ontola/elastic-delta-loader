@@ -19,13 +19,14 @@
 package io.ontola.ori.api
 
 import io.ontola.ori.api.context.ResourceCtx
+import org.elasticsearch.client.RestHighLevelClient
 
-class DeltaMessageProcessor(private val docCtx: ResourceCtx<*>) {
+class DeltaMessageProcessor(private val docCtx: ResourceCtx<*, RestHighLevelClient>) {
     private val record = docCtx.ctx.record
 
     fun process() {
         try {
-            printlnWithThread("[at:${record?.timestamp()}][start] Processing message")
+//            printlnWithThread("[at:${record?.timestamp()}][start] Processing message")
             val event = Event.parseRecord(docCtx)
             if (event == null || event.type != EventType.DELTA || event.data == null) {
                 EventBus.getBus().publishError(docCtx, InvalidEventException("Received invalid event on delta bus"))
@@ -33,7 +34,7 @@ class DeltaMessageProcessor(private val docCtx: ResourceCtx<*>) {
             }
             event.process()
 
-            printlnWithThread("[at:%s][end] Done with message\n", record?.timestamp())
+//            printlnWithThread("[at:%s][end] Done with message\n", record?.timestamp())
         } catch (e: Exception) {
             EventBus.getBus().publishError(docCtx, e)
             printlnWithThread("Exception while processing delta event: '%s'\n", e.toString())

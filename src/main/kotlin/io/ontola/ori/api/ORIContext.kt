@@ -26,8 +26,7 @@ import java.util.*
  */
 data class ORIContext(
     internal val config: Properties,
-    internal val kafkaOpts: Properties,
-    internal val redis: Config
+    internal val kafkaOpts: Properties
 ) {
     companion object {
         private val context: ORIContext
@@ -36,8 +35,7 @@ data class ORIContext(
             val config = initConfig()
             context = ORIContext(
                 config,
-                initKafkaConfig(config),
-                initRedisConfig(config)
+                initKafkaConfig(config)
             )
         }
 

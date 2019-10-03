@@ -21,6 +21,7 @@ repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+    maven { setUrl("https://jitpack.io") }
 }
 
 dependencies {
@@ -33,6 +34,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0-M2")
     implementation("org.redisson:redisson:3.11.4")
     implementation("com.squareup.okhttp3:okhttp:4.2.1")
+    implementation("com.github.jillesvangurp:es-kotlin-wrapper-client:v0.14.0")
+    implementation("com.beust:klaxon:5.0.1")
 
     implementation("org.eclipse.rdf4j:rdf4j-runtime:2.5.2") {
         exclude(group = "ch.qos.logback", module = "logback-classic")

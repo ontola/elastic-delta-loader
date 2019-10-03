@@ -1,0 +1,48 @@
+{
+  "@context": {
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "as": "https://www.w3.org/ns/activitystreams#",
+    "ldp": "http://www.w3.org/ns/ldp#",
+    "schema": "http://schema.org/",
+
+    "@base": "https://id.openraadsinformatie.nl/",
+
+    "has_organization_name": {
+        "@type": "@id",
+        "@id": "http://www.w3.org/2006/vcard/ns#hasOrganizationName"
+    },
+    "last_discussed_at": {
+        "@id": "https://argu.co/ns/meeting/lastDiscussedAt"
+    },
+    "name": {
+        "@id": "http://schema.org/name"
+    },
+
+    "MediaObject": "http://schema.org/MediaObject",
+
+    "isReferencedBy": {
+        "@type": "@id",
+        "@id": "http://purl.org/dc/terms/isReferencedBy"
+    },
+    "date_modified": {
+        "@id": "http://schema.org/dateModified"
+    },
+    "content_type": {
+        "@id": "http://schema.org/encodingFormat"
+    },
+    "original_url": {
+        "@id": "http://schema.org/isBasedOn"
+    },
+    "size_in_bytes": {
+        "@id": "http://schema.org/fileSize",
+        "@type": "xsd:nonNegativeInteger"
+    },
+    "text": {
+        "@id": "http://schema.org/text"
+    },
+    "url": {
+        "@id": "http://schema.org/contentUrl"
+    },
+
+  }
+}

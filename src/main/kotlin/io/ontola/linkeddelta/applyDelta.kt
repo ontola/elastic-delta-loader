@@ -1,5 +1,6 @@
 package io.ontola.linkeddelta
 
+import io.ontola.linkeddelta.processor.*
 import org.eclipse.rdf4j.model.Model
 import org.eclipse.rdf4j.model.Statement
 import org.eclipse.rdf4j.model.impl.LinkedHashModel

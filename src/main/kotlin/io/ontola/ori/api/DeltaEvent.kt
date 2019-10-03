@@ -18,6 +18,8 @@
 
 package io.ontola.ori.api
 
+import io.ontola.linkeddelta.loader.base.DocumentSetBase
+import io.ontola.linkeddelta.loader.elastic.DocumentSet
 import io.ontola.ori.api.context.ResourceCtx
 import io.ontola.rdfUtils.createIRI
 import io.ontola.rdfUtils.getQueryParameter
@@ -25,6 +27,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.eclipse.rdf4j.model.*
 import org.eclipse.rdf4j.model.impl.LinkedHashModel
+import org.elasticsearch.client.RestHighLevelClient
 import java.net.URI
 import java.util.*
 
@@ -32,7 +35,7 @@ private typealias PartitionMap = HashMap<Resource, List<Statement>>
 private typealias PartitionEntry = Map.Entry<Resource, List<Statement>>
 
 class DeltaEvent(
-    private val docCtx: ResourceCtx<*>,
+    private val docCtx: ResourceCtx<*, org.elasticsearch.client.RestHighLevelClient>,
     override val data: Model = LinkedHashModel()
 ) : Event(EventType.DELTA, null, null, data) {
     private val config: Properties = ORIContext.getCtx().config
@@ -41,7 +44,7 @@ class DeltaEvent(
         try {
             runBlocking {
                 val partitions = partition()
-                printlnWithThread("Processing delta event with %s partitions \n", partitions.size)
+//                printlnWithThread("Processing delta event with %s partitions \n", partitions.size)
                 for ((iri, delta) in partitions) {
                     launch {
                         try {
@@ -68,7 +71,7 @@ class DeltaEvent(
     }
 
     /** Partitions a delta into separately processable slices. */
-    internal fun partition(): Map<IRI, DocumentSet> {
+    internal fun partition(): Map<IRI, DocumentSetBase<RestHighLevelClient>> {
         val subjectBuckets = this.splitByDocument(data)
         return partitionPerDocument(subjectBuckets)
     }
@@ -97,7 +100,7 @@ class DeltaEvent(
     }
 
     /** Organizes anonymous resources into the bucket which refers to them */
-    private fun partitionPerDocument(buckets: PartitionMap): Map<IRI, DocumentSet> {
+    private fun partitionPerDocument(buckets: PartitionMap): Map<IRI, DocumentSetBase<RestHighLevelClient>> {
         val bNodeForestReferences = HashMap<BNode, Resource>()
         val forests = buckets
             .filterKeys { key -> key is IRI }

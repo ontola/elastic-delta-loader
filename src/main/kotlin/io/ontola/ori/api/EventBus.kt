@@ -26,13 +26,13 @@ import org.apache.kafka.clients.producer.RecordMetadata
 import org.apache.kafka.common.KafkaException
 import org.apache.kafka.common.PartitionInfo
 import org.apache.kafka.common.TopicPartition
+import org.apache.kafka.common.record.Record
 import org.eclipse.rdf4j.model.IRI
 import org.eclipse.rdf4j.model.Model
 import org.eclipse.rdf4j.model.vocabulary.VCARD4
 import org.eclipse.rdf4j.rio.RDFFormat
 import java.io.StringWriter
 import java.time.Duration
-import java.util.*
 import java.util.concurrent.Future
 import java.util.stream.Collectors
 
@@ -96,10 +96,11 @@ class EventBus {
         return busProducer.send(event.toRecord())
     }
 
-    internal fun publishError(docCtx: ResourceCtx<*>, e: Exception): Future<RecordMetadata> {
+    internal fun publishError(docCtx: ResourceCtx<*, *>, e: Exception): Future<RecordMetadata>? {
         println("Caught error ${e.message}")
         e.printStackTrace()
-        return busProducer.send(ErrorEvent(docCtx, e).toRecord())
+
+        return null
     }
 
     internal fun publishError(type: String, value: Model, org: IRI?): Future<RecordMetadata> {

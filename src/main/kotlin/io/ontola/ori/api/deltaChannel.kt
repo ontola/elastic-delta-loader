@@ -24,11 +24,12 @@ import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.produce
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.clients.consumer.KafkaConsumer
+import org.elasticsearch.client.RestHighLevelClient
 import java.time.Duration
 import kotlin.system.exitProcess
 
 @ExperimentalCoroutinesApi
-suspend fun processDeltas(docCtx: ResourceCtx<*>, fromBeginning: Boolean) = withContext(Dispatchers.Default) {
+suspend fun processDeltas(docCtx: ResourceCtx<*, RestHighLevelClient>, fromBeginning: Boolean) = withContext(Dispatchers.Default) {
     val ctx = ORIContext.getCtx()
     val threadCount = Integer.parseInt(ctx.config.getProperty("ori.api.threadCount"))
     try {
@@ -63,7 +64,7 @@ private fun CoroutineScope.produceDeltas(
 }
 
 private fun CoroutineScope.consumeDeltasAsync(
-    docCtx: ResourceCtx<*>,
+    docCtx: ResourceCtx<*, RestHighLevelClient>,
     channel: ReceiveChannel<ConsumerRecord<String, String>>
 ) = launch {
     for (record in channel) {

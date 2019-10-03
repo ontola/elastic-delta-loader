@@ -1,18 +1,14 @@
-# ORI API
+# Elastic Delta Loader
 
-Serves the REST Linked Data API for [Open Raadsinformatie](https://github.com/openstate/open-raadsinformatie/), available at `http://id.openraadsinformatie.nl`. There are other APIs available for this dataset as well ([docs](https://docs.openraadsinformatie.nl)).
+Fills the elastic endpoint for [Open Raadsinformatie](https://github.com/openstate/open-raadsinformatie/), available at
+`https://api.openraadsinformatie.nl/v0/elastic`. There are other APIs available for this dataset as well
+([docs](https://docs.openraadsinformatie.nl)).
 
 This program listens to a a kafka topic and converts [incoming events](https://github.com/ontola/linked-delta) into a
-serveable file system hierarchy. Multiple serialization formats and a zip file containing them all is generated for
-every incoming resource.
-
-Also included in the `nginx` folder is a basic configuration and dockerfile to serve the partitioned folder structure.
-
-Due to their concise and easy syntax, the [n-quads serializations](https://www.w3.org/TR/n-quads/) are considered canon.
-These are also used to determine intra-version state changes, any differences between the other formats are ignored.
+searchable elastic endpoint.
 
 ## Licence
-ORI API
+Elastic Delta Loader
 Copyright (C) 2019, Argu BV
 
 This program is free software: you can redistribute it and/or modify

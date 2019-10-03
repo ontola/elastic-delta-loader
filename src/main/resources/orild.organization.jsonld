@@ -1,0 +1,74 @@
+{
+  "@context": {
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "as": "https://www.w3.org/ns/activitystreams#",
+    "ldp": "http://www.w3.org/ns/ldp#",
+    "schema": "http://schema.org/",
+
+    "@base": "https://id.openraadsinformatie.nl/",
+
+    "has_organization_name": {
+        "@type": "@id",
+        "@id": "http://www.w3.org/2006/vcard/ns#hasOrganizationName"
+    },
+    "last_discussed_at": {
+        "@id": "https://argu.co/ns/meeting/lastDiscussedAt"
+    },
+
+    "Organization": "http://www.w3.org/ns/org#Organization",
+
+    "area": {
+        "@type": "@id",
+        "@id": "http://www.w3.org/ns/opengov#area"
+    },
+    "contact_details": {
+        "@type": "@id",
+        "@id": "http://www.w3.org/ns/opengov#contactDetail"
+    },
+    "abstract": {
+        "@id": "http://purl.org/dc/terms/abstract"
+    },
+    "description": {
+        "@id": "http://purl.org/dc/terms/description"
+    },
+    "classification": {
+        "@id": "http://www.w3.org/ns/org#classification"
+    },
+    "subOrganizationOf": {
+        "@type": "@id",
+        "@id": "http://www.w3.org/ns/org#subOrganizationOf"
+    },
+    "other_names": {
+        "@id": "http://www.w3.org/ns/opengov#otherName"
+    },
+    "links": {
+        "@type": "xsd:anyURI",
+        "@id": "Rdf:seeAlso"
+    },
+    "dissolution_date": {
+        "@id": "http://schema.org/dissolutionDate"
+    },
+    "founding_date": {
+        "@id": "http://schema.org/foundingDate"
+    },
+    "image": {
+        "@id": "http://schema.org/image"
+    },
+    "alt_label": {
+        "@id": "http://www.w3.org/2004/02/skos/core#altLabel"
+    },
+    "name": {
+        "@id": "http://www.w3.org/2004/02/skos/core#prefLabel"
+    },
+    "collection": {
+        "@id": "https://argu.co/ns/meta#collection"
+    },
+    "homepage": {
+        "@type": "xsd:anyURI",
+        "@id": "http://www.w3.org/2006/vcard/ns#url"
+    },
+    "email": {
+        "@id": "http://www.w3.org/2006/vcard/ns#email"
+    }
+  }
+}

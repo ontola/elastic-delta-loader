@@ -19,6 +19,8 @@
 package io.ontola.ori.api
 
 import com.github.jsonldjava.core.JsonLdConsts
+import io.ontola.ori.api.elastic.ORILDFormat
+import io.ontola.ori.api.elastic.ORILDWriter
 import org.eclipse.rdf4j.model.Model
 import org.eclipse.rdf4j.model.impl.LinkedHashModel
 import org.eclipse.rdf4j.rio.*
@@ -82,23 +84,21 @@ class ORio(private val writer: RDFWriter) : RDFWriter by writer {
         )
 
         fun createWriter(format: RDFFormat, out: OutputStream): ORio {
-            val rdfWriter =
-                if (format === RDFFormat.JSONLD) {
-                    JSONLDWriter(out, getWriterConfig(RDFFormat.JSONLD))
-                } else {
-                    Rio.createWriter(format, out)
-                }
+            val rdfWriter = when (format) {
+                RDFFormat.JSONLD -> JSONLDWriter(out, getWriterConfig(RDFFormat.JSONLD))
+                ORILDFormat -> ORILDWriter(out, getWriterConfig(ORILDFormat))
+                else -> Rio.createWriter(format, out)
+            }
 
             return ORio(rdfWriter)
         }
 
         fun createWriter(format: RDFFormat, writer: Writer): ORio {
-            val rdfWriter =
-                if (format === RDFFormat.JSONLD) {
-                    JSONLDWriter(writer, getWriterConfig(RDFFormat.JSONLD))
-                } else {
-                    Rio.createWriter(format, writer)
-                }
+            val rdfWriter = when (format) {
+                RDFFormat.JSONLD -> JSONLDWriter(writer, getWriterConfig(RDFFormat.JSONLD))
+                ORILDFormat -> ORILDWriter(writer, getWriterConfig(ORILDFormat))
+                else -> Rio.createWriter(format, writer)
+            }
 
             return ORio(rdfWriter)
         }
@@ -107,7 +107,7 @@ class ORio(private val writer: RDFWriter) : RDFWriter by writer {
             val writerConfig = WriterConfig()
             writerConfig.set(BasicWriterSettings.INLINE_BLANK_NODES, true)
 
-            if (format == RDFFormat.JSONLD) {
+            if (format == RDFFormat.JSONLD || format == ORILDFormat) {
                 writerConfig.set(JSONLDSettings.HIERARCHICAL_VIEW, true)
                 writerConfig.set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT)
                 writerConfig.set(JSONLDSettings.OPTIMIZE, true)
@@ -130,18 +130,18 @@ class ORio(private val writer: RDFWriter) : RDFWriter by writer {
             return model
         }
 
-        fun parseToModel(reader: Reader, baseDoc: String? = null): Model {
-            return parseToModel { baseDocument, rdfParser ->
+        fun parseToModel(reader: Reader, baseDoc: String? = null, format: RDFFormat = RDFFormat.NQUADS): Model {
+            return parseToModel(format) { baseDocument, rdfParser ->
                 reader.use {
                     rdfParser.parse(it, baseDoc ?: baseDocument)
                 }
             }
         }
 
-        fun parseToModel(string: String, baseDoc: String? = null): Model {
+        fun parseToModel(string: String, baseDoc: String? = null, format: RDFFormat = RDFFormat.NQUADS): Model {
             var model: Model = LinkedHashModel()
             StringReader(string).use {
-                model = parseToModel(it, baseDoc)
+                model = parseToModel(it, baseDoc, format)
             }
             return model
         }

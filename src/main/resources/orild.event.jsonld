@@ -1,0 +1,31 @@
+{
+  "@context": {
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "as": "https://www.w3.org/ns/activitystreams#",
+    "ldp": "http://www.w3.org/ns/ldp#",
+    "schema": "http://schema.org/",
+    "meeting": "https://argu.co/ns/meeting/",
+
+    "@base": "https://id.openraadsinformatie.nl/",
+
+    "has_organization_name": {
+        "@type": "@id",
+        "@id": "http://www.w3.org/2006/vcard/ns#hasOrganizationName"
+    },
+    "last_discussed_at": {
+        "@id": "https://argu.co/ns/meeting/lastDiscussedAt"
+    },
+
+    "Event": "http://schema.org/Event",
+
+    "end_date": {
+        "@id": "http://schema.org/endDate",
+    },
+    "start_date": {
+        "@id": "http://schema.org/startDate",
+    },
+    "last_discussed_at": {
+        "@id": "https://argu.co/ns/meeting/lastDiscussedAt",
+    },
+  }
+}

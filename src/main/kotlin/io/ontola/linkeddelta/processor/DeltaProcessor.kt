@@ -1,4 +1,4 @@
-package io.ontola.linkeddelta
+package io.ontola.linkeddelta.processor
 
 import org.eclipse.rdf4j.model.IRI
 import org.eclipse.rdf4j.model.Model

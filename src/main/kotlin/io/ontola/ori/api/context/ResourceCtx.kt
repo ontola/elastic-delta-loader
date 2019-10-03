@@ -20,16 +20,21 @@ package io.ontola.ori.api.context
 
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.eclipse.rdf4j.model.IRI
-import java.io.File
 
 data class CtxProps(
     val cmd: String? = null,
     val record: ConsumerRecord<String, String>? = null,
     val iri: IRI? = null,
+    val partition: String? = null,
     val version: String? = null
 )
 
-abstract class ResourceCtx<T : ResourceCtx<T>>(open val ctx: CtxProps = CtxProps()) {
+typealias ResourceCtxObj<T, DS> = ResourceCtx<T, DS>
+
+abstract class ResourceCtx<T : ResourceCtx<T, DS>, DS>(
+    open val ctx: CtxProps = CtxProps(),
+    open val datastore: DS
+) {
     abstract val cmd: String?
 
     abstract val iri: IRI?
@@ -40,12 +45,14 @@ abstract class ResourceCtx<T : ResourceCtx<T>>(open val ctx: CtxProps = CtxProps
 
     abstract val id: String?
 
-    abstract fun dir(): File
+    abstract val partition: String?
 
     abstract fun copy(
         cmd: String? = this.ctx.cmd,
         record: ConsumerRecord<String, String>? = this.ctx.record,
         iri: IRI? = this.ctx.iri,
-        version: String? = this.ctx.version
-    ): T
+        partition: String? = this.ctx.partition,
+        version: String? = this.ctx.version,
+        datastore: DS? = this.datastore
+    ): ResourceCtxObj<T, DS>
 }

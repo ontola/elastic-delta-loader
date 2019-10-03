@@ -24,16 +24,13 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.io.File
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
+import org.elasticsearch.client.RequestOptions
+import org.elasticsearch.client.RestHighLevelClient
+import org.elasticsearch.client.indices.*
 import java.util.*
-import kotlin.system.exitProcess
 
 /**
- * Listens to kafka streams and processes delta streams into the file system.
- *
- * TODO: Add error handling service
+ * Listens to kafka streams and processes delta streams into elastic.
  */
 @ExperimentalCoroutinesApi
 fun main(args: Array<String>) = runBlocking {
@@ -41,38 +38,28 @@ fun main(args: Array<String>) = runBlocking {
 
     printInitMessage(ctx.config)
 
-    ensureOutputFolder(ctx.config)
-
     var primaryFlag = ""
     if (args.isNotEmpty()) {
         primaryFlag = args[0]
     }
 
-    when (primaryFlag) {
-        "--clean-old-versions" -> {
-            cleanOldVersionsAsync().await()
-            exitProcess(0)
+    val cmd = arrayListOf("processDeltas", primaryFlag).joinToString(" ")
+    val deltas = launch(coroutineContext) {
+        val dataStore = RestHighLevelClient(
+            host="10.0.1.144",
+            port=9200,
+            https=false
+        )
+        val exists = dataStore.indices().exists(GetIndexRequest("someindex"), RequestOptions.DEFAULT)
+        if (!exists) {
+            dataStore.indices().create(CreateIndexRequest("someindex"), RequestOptions.DEFAULT)
         }
-        else -> {
-            val cmd = arrayListOf("processDeltas", primaryFlag).joinToString(" ")
-            val deltas = launch(coroutineContext) {
-                processDeltas(DocumentCtx(CtxProps(cmd)), primaryFlag == "--from-beginning")
-            }
-
-            val updates = processUpdates()
-
-            joinAll(deltas, updates)
-        }
+        processDeltas(DocumentCtx(CtxProps(cmd), dataStore), primaryFlag == "--from-beginning")
     }
+
+    joinAll(deltas)
 
     joinAll()
-}
-
-fun ensureOutputFolder(settings: Properties) {
-    val baseDirectory = File(settings.getProperty("ori.api.dataDir"))
-    if (!baseDirectory.exists()) {
-        baseDirectory.mkdirs()
-    }
 }
 
 fun printInitMessage(p: Properties) {
@@ -85,20 +72,4 @@ fun printInitMessage(p: Properties) {
         println(key.substring("ori.api.".length) + ": " + value)
     }
     println("================================================")
-}
-
-/**
- * Hard check for an MD5 digester.
- * No fallback is used since that could cause inconsistent results when multiple hash methods are mixed.
- */
-fun getDigester(): MessageDigest {
-    var digester: MessageDigest? = null
-    try {
-        digester = MessageDigest.getInstance("MD5")
-    } catch (e: NoSuchAlgorithmException) {
-        println("[FATAL] No MD5 MessageDigest algorithm support, exiting")
-        System.exit(1)
-    }
-
-    return digester as MessageDigest
 }

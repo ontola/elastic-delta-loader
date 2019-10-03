@@ -18,7 +18,6 @@
 
 package io.ontola.ori.api
 
-import org.redisson.config.Config
 import java.util.*
 
 fun initConfig(): Properties {
@@ -35,6 +34,10 @@ fun initConfig(): Properties {
     config.setProperty(
         "ori.api.baseIRI",
         (System.getenv("BASE_IRI") ?: "https://id.openraadsinformatie.nl")
+    )
+    config.setProperty(
+        "ori.api.elastic.index_prefix",
+        (System.getenv("ELASTIC_INDEX_PREFIX") ?: "ori")
     )
     config.setProperty(
         "ori.api.supplantIRI",
@@ -136,21 +139,4 @@ fun initKafkaConfig(config: Properties): Properties {
     }
 
     return kafkaOpts
-}
-
-fun initRedisConfig(config: Properties): Config {
-    val redisOpts = Config()
-    val address =
-        if (config.getProperty("ori.api.redis.address").isNotEmpty()) {
-            config.getProperty("ori.api.redis.address")
-        } else {
-            val hostname = config.getProperty("ori.api.redis.hostname")
-            val port = config.getProperty("ori.api.redis.port")
-            "redis://$hostname:$port"
-        }
-
-    redisOpts.useSingleServer().apply {
-        this.address = address
-    }
-    return redisOpts
 }

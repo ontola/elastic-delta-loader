@@ -1,0 +1,81 @@
+{
+  "@context": {
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "as": "https://www.w3.org/ns/activitystreams#",
+    "ldp": "http://www.w3.org/ns/ldp#",
+    "schema": "http://schema.org/",
+
+    "@base": "https://id.openraadsinformatie.nl/",
+
+    "has_organization_name": {
+        "@type": "@id",
+        "@id": "http://www.w3.org/2006/vcard/ns#hasOrganizationName"
+    },
+    "last_discussed_at": {
+        "@id": "https://argu.co/ns/meeting/lastDiscussedAt"
+    },
+
+    "Meeting": "https://argu.co/ns/meeting/Meeting",
+
+    "agenda": {
+        "@type": "@id",
+        "@id": "https://argu.co/ns/meeting/agenda",
+        "@container": "@list"
+    },
+    "attachment": {
+        "@type": "@id",
+        "@id": "https://argu.co/ns/meeting/attachment"
+    },
+    "motion": {
+        "@type": "@id",
+        "@id": "http://www.w3.org/ns/opengov#motion"
+    },
+    "attendee": {
+        "@type": "@id",
+        "@id": "http://schema.org/attendee"
+    },
+    "audio": {
+        "@type": "@id",
+        "@id": "http://schema.org/audio"
+    },
+    "description": {
+        "@id": "http://schema.org/description"
+    },
+    "status": {
+        "@type": "xsd:anyURI",
+        "@id": "http://schema.org/eventStatus"
+    },
+    "location": {
+        "@id": "http://schema.org/location"
+    },
+    "name": {
+        "@id": "http://schema.org/name"
+    },
+    "organization": {
+        "@type": "@id",
+        "@id": "http://schema.org/organizer"
+    },
+    "committee": {
+        "@type": "@id",
+        "@id": "https://argu.co/ns/meeting/committee"
+    },
+    "parent": {
+        "@type": "@id",
+        "@id": "http://schema.org/superEvent"
+    },
+    "chair": {
+        "@id": "https://argu.co/ns/meeting/chair"
+    },
+    "absentee": {
+        "@type": "@id",
+        "@id": "http://schema.org/absentee"
+    },
+    "invitee": {
+        "@type": "@id",
+        "@id": "http://schema.org/invitee"
+    },
+    "start_date": {
+        "@id": "http://schema.org/startDate"
+    }
+  }
+}

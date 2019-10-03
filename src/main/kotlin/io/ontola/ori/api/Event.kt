@@ -27,6 +27,7 @@ import org.eclipse.rdf4j.model.Model
 import org.eclipse.rdf4j.model.Resource
 import org.eclipse.rdf4j.model.vocabulary.RDF
 import org.eclipse.rdf4j.model.vocabulary.VCARD4
+import org.elasticsearch.client.RestHighLevelClient
 import java.nio.charset.StandardCharsets
 import java.util.*
 
@@ -47,7 +48,7 @@ open class Event(
             config.getProperty("ori.api.kafka.updateTopic") ?: throw Exception("Update topic not set")
         private val orgPredicate = VCARD4.HAS_ORGANIZATION_NAME.stringValue()
 
-        fun parseRecord(docCtx: ResourceCtx<*>): Event? {
+        fun parseRecord(docCtx: ResourceCtx<*, RestHighLevelClient>): Event? {
             val record = docCtx.record
 
             return when (record?.topic()) {

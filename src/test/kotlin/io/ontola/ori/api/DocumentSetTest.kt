@@ -21,9 +21,9 @@ package io.ontola.ori.api
 import io.kotlintest.matchers.file.shouldContainFile
 import io.kotlintest.matchers.file.shouldExist
 import io.kotlintest.should
-import io.kotlintest.shouldNotBe
 import io.kotlintest.specs.StringSpec
 import io.ontola.activitystreams.vocabulary.AS
+import io.ontola.linkeddelta.loader.base.DocumentSet
 import io.ontola.ori.api.context.CtxProps
 import io.ontola.rdf4j.prop
 import io.ontola.rdfUtils.createIRI
